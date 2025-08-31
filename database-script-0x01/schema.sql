@@ -46,7 +46,7 @@ CREATE TABLE bookings (
     user_id CHAR(36) NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
-    total_price DECIMAL(10,2) NOT NULL, -- intentionally denormalized for historical accuracy
+    total_price DECIMAL(10,2) NOT NULL,
     status ENUM('pending', 'confirmed', 'canceled') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_booking_property FOREIGN KEY (property_id) REFERENCES properties(property_id) ON DELETE CASCADE,
