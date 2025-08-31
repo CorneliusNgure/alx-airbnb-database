@@ -29,17 +29,17 @@ The schema models the following entities:
    mysql --version
    ```
 2. **Create database (if not created)**
-```sql
-CREATE DATABASE airbnb_clone;
-USE airbnb_clone;
-```
+    ```sql
+    CREATE DATABASE airbnb_clone;
+    USE airbnb_clone;
+    ```
 
 3. **Run the script:**
-```bash
-mysql -u your_username -p airbnb_clone < schema.sql
-```
+    ```bash
+    mysql -u your_username -p airbnb_clone < schema.sql
+    ```
 
 4. **Verify Tables**
-```sql
-SHOW TABLES;
-```
+    ```sql
+    SHOW TABLES;
+    ```
