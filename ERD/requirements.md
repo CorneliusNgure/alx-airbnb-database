@@ -1,69 +1,70 @@
 ```mermaid
 erDiagram
     USER {
-        UUID user_id PK
+        UUID user_id
         VARCHAR first_name
         VARCHAR last_name
-        VARCHAR email UNIQUE
+        VARCHAR email
         VARCHAR password_hash
         VARCHAR phone_number
-        ENUM role
-        TIMESTAMP created_at
+        role ENUM
+        created_at TIMESTAMP
     }
 
     PROPERTY {
-        UUID property_id PK
-        UUID host_id FK
+        UUID property_id
+        UUID host_id
         VARCHAR name
         TEXT description
         VARCHAR location
         DECIMAL pricepernight
-        TIMESTAMP created_at
-        TIMESTAMP updated_at
+        created_at TIMESTAMP
+        updated_at TIMESTAMP
     }
 
     BOOKING {
-        UUID booking_id PK
-        UUID property_id FK
-        UUID user_id FK
+        UUID booking_id
+        UUID property_id
+        UUID user_id
         DATE start_date
         DATE end_date
         DECIMAL total_price
-        ENUM status
-        TIMESTAMP created_at
+        status ENUM
+        created_at TIMESTAMP
     }
 
     PAYMENT {
-        UUID payment_id PK
-        UUID booking_id FK
+        UUID payment_id
+        UUID booking_id
         DECIMAL amount
-        TIMESTAMP payment_date
-        ENUM payment_method
+        payment_date TIMESTAMP
+        payment_method ENUM
     }
 
     REVIEW {
-        UUID review_id PK
-        UUID property_id FK
-        UUID user_id FK
-        INTEGER rating
-        TEXT comment
-        TIMESTAMP created_at
+        UUID review_id
+        UUID property_id
+        UUID user_id
+        rating INTEGER
+        comment TEXT
+        created_at TIMESTAMP
     }
 
     MESSAGE {
-        UUID message_id PK
-        UUID sender_id FK
-        UUID recipient_id FK
-        TEXT message_body
-        TIMESTAMP sent_at
+        UUID message_id
+        UUID sender_id
+        UUID recipient_id
+        message_body TEXT
+        sent_at TIMESTAMP
     }
 
-    %% Relationships with explicit cardinalities
-    USER ||--o{ PROPERTY : "1 hosts *"
-    USER ||--o{ BOOKING : "1 makes *"
-    USER ||--o{ REVIEW : "1 writes *"
-    USER ||--o{ MESSAGE : "1 sends *"
-    USER ||--o{ MESSAGE : "1 receives *"
-    PROPERTY ||--o{ BOOKING : "1 has *"
-    PROPERTY ||--o{ REVIEW : "1 receives *"
-    BOOKING ||--o{ PAYMENT : "1 generates *"
+    %% Relationships with cardinalities
+    USER ||--o{ PROPERTY : "1 hosts many"
+    USER ||--o{ BOOKING : "1 makes many"
+    USER ||--o{ REVIEW : "1 writes many"
+    USER ||--o{ MESSAGE : "1 sends many"
+    USER ||--o{ MESSAGE : "1 receives many"
+    PROPERTY ||--o{ BOOKING : "1 has many"
+    PROPERTY ||--o{ REVIEW : "1 receives many"
+    BOOKING ||--o{ PAYMENT : "1 generates many"
+
