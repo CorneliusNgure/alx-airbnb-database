@@ -1,45 +1,36 @@
-# Airbnb Clone – Database Schema
+# 🗄️ Airbnb Clone – Database Schema (PostgreSQL)
 
-  
-The schema defines the relational structure, constraints, and indexes required for the application to run on **MySQL 8.0+**.  
+This directory contains the **`schema.sql`** file, which defines the PostgreSQL database schema for the Airbnb Clone project.  
 
 ---
 
 ## Contents
-- `schema.sql` → SQL DDL script for creating all database tables, relationships, and indexes.
+- **`schema.sql`** → Creates tables, primary keys, foreign keys, indexes, and constraints for:
+  - `users` – Authentication & profiles  
+  - `properties` – Listings hosted by users  
+  - `bookings` – Reservations with historical pricing  
+  - `payments` – Transactions tied to bookings  
+  - `reviews` – Ratings & comments for properties  
+  - `messages` – Direct communication between users  
 
 ---
 
-## Entities Overview
-The schema models the following entities:
+## Usage
 
-1. **Users** → Guests, Hosts, and Admins.  
-2. **Properties** → Listings owned by hosts, including pricing and description.  
-3. **Bookings** → Reservations made by users for properties.  
-4. **Payments** → Records of transactions for bookings.  
-5. **Reviews** → Guest feedback (rating + comments) for properties.  
-6. **Messages** → Direct communication between users.  
+### 1. Create the database
+```bash
+createdb airbnb_clone
+```
 
----
+### 2. Load the schema:
+```bash
+psql -d airbnb_clone -f schema.sql
+```
 
-## Setup Instructions
+### 3. Verify Tables:
+```sql
+\c airbnb_clone
+\dt;
+```
 
-1. **Ensure MySQL 8.0+ is installed**
-   ```bash
-   mysql --version
-   ```
-2. **Create database (if not created)**
-    ```sql
-    CREATE DATABASE airbnb_clone;
-    USE airbnb_clone;
-    ```
 
-3. **Run the script:**
-    ```bash
-    mysql -u your_username -p airbnb_clone < schema.sql
-    ```
-
-4. **Verify Tables**
-    ```sql
-    SHOW TABLES;
-    ```

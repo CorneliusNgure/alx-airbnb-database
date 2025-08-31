@@ -1,35 +1,36 @@
 # Airbnb Clone – Seed Data
 
-This is the data used to populate the Airbnb Clone database with sample data for development and testing.  
+This directory contains the `seed.sql` file used to populate the **Airbnb Clone** database with sample data.  
+It should be run **after** creating the schema (`schema.sql`).
 
 ---
 
-## 📌 Contents
-- **`seed.sql`** → Inserts sample data into all core tables:
-  - **users** (guests, hosts, admin)  
-  - **properties** (apartments, villas, cottages)  
-  - **bookings** (confirmed & pending)  
-  - **payments** (credit card, etc.)  
-  - **reviews** (ratings and comments)  
-  - **messages** (conversations between users)  
+## Contents
+- **`seed.sql`** – Inserts sample data for:
+  - Users
+  - Properties
+  - Bookings
+  - Payments
+  - Reviews
+  - Messages
 
 ---
 
-## 🚀 Usage
+## How to Run
 
-1. ** Make sure the database schema is already created by running:**
-```bash
-   mysql -u your_user -p < ../schema/schema.sql
+### 1. Make sure you have created the database and schema:
+
+   ```bash
+   psql -U your_username -d airbnb_clone -f ../schema/schema.sql
 ```
 
-2. **Load the seed data**
+### 2. Run the script to insert sample data:
 ```bash
-mysql -u your_user -p < seed.sql
+psql -U your_username -d airbnb_clone -f seed.sql
 ```
 
-3. **Veriy the data**
+### 3. Verify Data:
 ```sql
-USE airbnb_clone;
 SELECT * FROM users;
 SELECT * FROM properties;
 SELECT * FROM bookings;
