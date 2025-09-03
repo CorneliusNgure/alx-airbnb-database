@@ -1,15 +1,15 @@
-# SQL Join Queries 
+# SQL Join and Subquery Examples
 
-Examples of how to use different types of SQL joins (INNER JOIN, LEFT JOIN, FULL OUTER JOIN) on the **Airbnb clone database schema**.
+This README provides SQL queries demonstrating the use of different types of joins, subqueries, aggregations, and window functions in a PostgreSQL Airbnb-like database schema.
 
 ---
 
-## 🔹 1. INNER JOIN
+## 1. INNER JOIN
 
 **Retrieve all bookings and the respective users who made those bookings.**
 
 ```sql
-SELECT
+SELECT 
     b.booking_id,
     b.property_id,
     b.start_date,
@@ -25,16 +25,14 @@ INNER JOIN users u
     ON b.user_id = u.user_id;
 ```
 
-Only returns bookings that are linked to existing users.
-
 ---
 
-## 🔹 2. LEFT JOIN
+## 2. LEFT JOIN
 
 **Retrieve all properties and their reviews, including properties that have no reviews.**
 
 ```sql
-SELECT
+SELECT 
     p.property_id,
     p.name AS property_name,
     p.location,
@@ -44,21 +42,18 @@ SELECT
     r.created_at AS review_date
 FROM properties p
 LEFT JOIN reviews r
-    ON p.property_id = r.property_id;
+    ON p.property_id = r.property_id
 ORDER BY p.name;
 ```
 
-Returns all properties. If a property has no reviews, review-related columns will appear as `NULL`.
-Results are ordered alphabetically by property name.
-
 ---
 
-## 🔹 3. FULL OUTER JOIN
+## 3. FULL OUTER JOIN
 
 **Retrieve all users and all bookings, even if the user has no booking or a booking is not linked to a user.**
 
 ```sql
-SELECT
+SELECT 
     u.user_id,
     u.first_name,
     u.last_name,
@@ -74,15 +69,141 @@ FULL OUTER JOIN bookings b
     ON u.user_id = b.user_id;
 ```
 
-Returns all users and all bookings:
+---
 
-* Users without bookings will show `NULL` in booking columns.
-* Bookings without valid users will show `NULL` in user columns.
+## 4. Subquery — Average Rating > 4.0
+
+**Find all properties where the average rating is greater than 4.0 using a subquery.**
+
+```sql
+SELECT 
+    p.property_id,
+    p.name AS property_name,
+    p.location,
+    p.pricepernight
+FROM properties p
+WHERE p.property_id IN (
+    SELECT r.property_id
+    FROM reviews r
+    GROUP BY r.property_id
+    HAVING AVG(r.rating) > 4.0
+);
+```
 
 ---
 
-## Notes
+## 5. JOIN + GROUP BY Alternative
 
-* **INNER JOIN** → only matching rows.
-* **LEFT JOIN** → all from the left table + matches from the right.
-* **FULL OUTER JOIN** → all rows from both tables, matched where possible.
+**Find all properties with average rating greater than 4.0 using a JOIN.**
+
+```sql
+SELECT 
+    p.property_id,
+    p.name AS property_name,
+    p.location,
+    p.pricepernight,
+    AVG(r.rating) AS avg_rating
+FROM properties p
+INNER JOIN reviews r
+    ON p.property_id = r.property_id
+GROUP BY p.property_id, p.name, p.location, p.pricepernight
+HAVING AVG(r.rating) > 4.0;
+```
+
+---
+
+## 6. Correlated Subquery — Users with More Than 3 Bookings
+
+**Find users who have made more than 3 bookings using a correlated subquery.**
+
+```sql
+SELECT 
+    u.user_id,
+    u.first_name,
+    u.last_name,
+    u.email
+FROM users u
+WHERE (
+    SELECT COUNT(*)
+    FROM bookings b
+    WHERE b.user_id = u.user_id
+) > 3;
+```
+
+---
+
+## 7. JOIN + GROUP BY Alternative for User Bookings
+
+**Find users who have made more than 3 bookings using a JOIN with GROUP BY.**
+
+```sql
+SELECT 
+    u.user_id,
+    u.first_name,
+    u.last_name,
+    u.email,
+    COUNT(b.booking_id) AS total_bookings
+FROM users u
+INNER JOIN bookings b
+    ON u.user_id = b.user_id
+GROUP BY u.user_id, u.first_name, u.last_name, u.email
+HAVING COUNT(b.booking_id) > 3;
+```
+
+---
+
+## 8. Total Number of Bookings per User
+
+**Find the total number of bookings made by each user using COUNT and GROUP BY.**
+
+```sql
+SELECT 
+    u.user_id,
+    u.first_name,
+    u.last_name,
+    u.email,
+    COUNT(b.booking_id) AS total_bookings
+FROM users u
+LEFT JOIN bookings b
+    ON u.user_id = b.user_id
+GROUP BY u.user_id, u.first_name, u.last_name, u.email
+ORDER BY total_bookings DESC;
+```
+
+---
+
+## 9. Window Function — Rank Properties by Bookings
+
+**Rank properties based on the total number of bookings they have received using RANK().**
+
+```sql
+SELECT 
+    p.property_id,
+    p.name AS property_name,
+    COUNT(b.booking_id) AS total_bookings,
+    RANK() OVER (ORDER BY COUNT(b.booking_id) DESC) AS booking_rank
+FROM properties p
+LEFT JOIN bookings b
+    ON p.property_id = b.property_id
+GROUP BY p.property_id, p.name
+ORDER BY booking_rank;
+```
+
+---
+
+## 10. Window Function — Row Number for Properties by Bookings
+
+**Assign a sequential row number to properties based on booking counts using ROW\_NUMBER().**
+
+```sql
+SELECT 
+    p.property_id,
+    p.name AS property_name,
+    COUNT(b.booking_id) AS total_bookings,
+    ROW_NUMBER() OVER (ORDER BY COUNT(b.booking_id) DESC) AS booking_position
+FROM properties p
+LEFT JOIN bookings b
+    ON p.property_id = b.property_id
+GROUP BY p.property_id, p.name
+ORDER BY booking_position;
+```
