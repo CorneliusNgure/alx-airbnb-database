@@ -10,3 +10,8 @@ CREATE INDEX idx_bookings_dates ON bookings(start_date, end_date);
 CREATE INDEX idx_properties_host_id ON properties(host_id);
 CREATE INDEX idx_properties_location ON properties(location);
 CREATE INDEX idx_properties_price ON properties(pricepernight);
+
+EXPLAIN ANALYZE
+SELECT *
+FROM bookings
+WHERE user_id = 'some-user-uuid';
