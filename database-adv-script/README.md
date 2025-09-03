@@ -45,9 +45,11 @@ SELECT
 FROM properties p
 LEFT JOIN reviews r
     ON p.property_id = r.property_id;
+ORDER BY p.name;
 ```
 
 Returns all properties. If a property has no reviews, review-related columns will appear as `NULL`.
+Results are ordered alphabetically by property name.
 
 ---
 
