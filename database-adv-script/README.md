@@ -81,7 +81,7 @@ Returns all users and all bookings:
 
 ---
 
-## 📌 Notes
+## Notes
 
 * **INNER JOIN** → only matching rows.
 * **LEFT JOIN** → all from the left table + matches from the right.
