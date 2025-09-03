@@ -1,6 +1,6 @@
 # SQL Join and Subquery Examples
 
-This README provides SQL queries demonstrating the use of different types of joins and subqueries in a PostgreSQL Airbnb-like database schema.
+This README provides SQL queries demonstrating the use of different types of joins, subqueries, aggregations, and window functions in a PostgreSQL Airbnb-like database schema.
 
 ---
 
@@ -71,7 +71,7 @@ FULL OUTER JOIN bookings b
 
 ---
 
-## 4. Subquery => Average Rating > 4.0
+## 4. Subquery — Average Rating > 4.0
 
 **Find all properties where the average rating is greater than 4.0 using a subquery.**
 
@@ -149,3 +149,45 @@ INNER JOIN bookings b
 GROUP BY u.user_id, u.first_name, u.last_name, u.email
 HAVING COUNT(b.booking_id) > 3;
 ```
+
+---
+
+## 8. Total Number of Bookings per User
+
+**Find the total number of bookings made by each user using COUNT and GROUP BY.**
+
+```sql
+SELECT 
+    u.user_id,
+    u.first_name,
+    u.last_name,
+    u.email,
+    COUNT(b.booking_id) AS total_bookings
+FROM users u
+LEFT JOIN bookings b
+    ON u.user_id = b.user_id
+GROUP BY u.user_id, u.first_name, u.last_name, u.email
+ORDER BY total_bookings DESC;
+```
+
+---
+
+## 9. Window Functions — Rank Properties by Bookings
+
+**Rank properties based on the total number of bookings using both ROW\_NUMBER() and RANK().**
+
+```sql
+SELECT 
+    p.property_id,
+    p.name AS property_name,
+    COUNT(b.booking_id) AS total_bookings,
+    ROW_NUMBER() OVER (ORDER BY COUNT(b.booking_id) DESC) AS booking_position,
+    RANK() OVER (ORDER BY COUNT(b.booking_id) DESC) AS booking_rank
+FROM properties p
+LEFT JOIN bookings b
+    ON p.property_id = b.property_id
+GROUP BY p.property_id, p.name
+ORDER BY booking_rank;
+```
+
+---
