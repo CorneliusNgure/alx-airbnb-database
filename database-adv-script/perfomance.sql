@@ -22,7 +22,7 @@ JOIN users u
 JOIN properties p
     ON b.property_id = p.property_id
 LEFT JOIN payments pay
-    ON b.booking_id = pay.booking_id;
+    ON b.booking_id = pay.booking_id
 WHERE b.status = 'confirmed'
   AND p.location = 'Nairobi';
 
