@@ -94,7 +94,7 @@ CREATE INDEX IF NOT EXISTS idx_bookings_property_id ON bookings(property_id);
 
 ## 5. Recommendations
 
-* Always analyze queries with `EXPLAIN ANALYZE` to detect Seq Scans and Hash Joins.
+* Analyze queries with `EXPLAIN ANALYZE` to detect Seq Scans and Hash Joins.
 * Add indexes on frequently filtered/joined columns: `status`, `user_id`, `property_id`, `booking_id`.
 * Avoid `SELECT *`; select only required columns.
 * Consider **partitioning large tables** (e.g., `bookings` by `start_date`) for long-term scalability.
